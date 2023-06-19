@@ -1,8 +1,11 @@
 import _thread
-import ujson as json
+try:
+    import ujson as json
+except:
+    import json
 
 
-class JsonConfigureClass(object):
+class JsonConfigureHandler(object):
     GET = 0x01
     SET = 0x02
     DEL = 0x03
@@ -71,8 +74,27 @@ class JsonConfigureClass(object):
         return self.execute(dict_[key], keys, value=value, operate=operate)
 
 
+class ConfigureRegisterTable(object):
+
+    register_table = {}
+
+    @classmethod
+    def get(cls, path):
+        return cls.register_table.get(path)
+
+    @classmethod
+    def set(cls, path, config):
+        cls.register_table[path] = config
+
+
 def ConfigureHandler(path):
+    registered_config = ConfigureRegisterTable.get(path)
+    if registered_config is not None:
+        return registered_config
+
     if path.endswith('.json'):
-        return JsonConfigureClass(path)
+        config = JsonConfigureHandler(path)
+        ConfigureRegisterTable.set(path, config)
+        return config
     else:
         raise TypeError('file format not supported!')

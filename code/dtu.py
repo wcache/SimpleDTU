@@ -42,6 +42,8 @@ class DTU(object):
                 queue=self.queue,
                 error_trans=True
             )
+        else:
+            raise TypeError('{} not supported, only support mqtt and tcp cloud now!'.format(cloud_type))
 
     def run(self):
         # 启动下行数据处理线程
