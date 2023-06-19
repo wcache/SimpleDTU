@@ -44,12 +44,12 @@ class DTU(object):
             )
 
     def run(self):
+        # 启动下行数据处理线程
+        self.down_transaction()
         # 初始化云对象
         self.cloud.init()
         # 启动上行数据处理线程
         self.up_transaction()
-        # 启动下行数据处理线程
-        self.down_transaction()
 
     def down_transaction(self):
         logger.info('start down transaction worker thread {}.'.format(_thread.get_ident()))
